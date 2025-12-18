@@ -1,14 +1,16 @@
 import axios from 'axios';
 
-// Ganti URL ini jika backend sudah deploy, untuk local pakai proxy vite
+// KONFIGURASI API
+// Kita arahkan langsung ke Backend Vercel agar bisa diakses online
 const api = axios.create({
- baseURL: 'https://backend-caffinity.vercel.app/api', // Vite akan mengarahkan /api ke http://localhost:5000
+  baseURL: 'https://backend-caffinity.vercel.app/api', 
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 // Interceptor: Sisipkan Token JWT otomatis ke setiap request
+// (Supaya user tidak perlu login berulang-ulang)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -21,6 +23,7 @@ api.interceptors.request.use(
 );
 
 // Interceptor: Handle jika Token Expired (401)
+// (Jika sesi habis, otomatis logout dan kembali ke login)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -76,6 +79,5 @@ export const userAPI = {
 export const dashboardAPI = {
   getStats: () => api.get('/dashboard/stats'),
 };
-
 
 export default api;
