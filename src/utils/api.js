@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Ganti URL ini jika backend sudah deploy, untuk local pakai proxy vite
 const api = axios.create({
-  baseURL: '/api', // Vite akan mengarahkan /api ke http://localhost:5000
+ baseURL: 'https://backend-caffinity.vercel.app/api', // Vite akan mengarahkan /api ke http://localhost:5000
   headers: {
     'Content-Type': 'application/json',
   },
@@ -76,5 +76,6 @@ export const userAPI = {
 export const dashboardAPI = {
   getStats: () => api.get('/dashboard/stats'),
 };
+
 
 export default api;
