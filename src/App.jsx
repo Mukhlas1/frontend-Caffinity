@@ -27,6 +27,7 @@ import './App.css';
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
+  // 1. Tampilkan Loading Spinner saat cek token (Mencegah tendang ke login saat refresh)
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-amber-50">
@@ -35,7 +36,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // Jika tidak ada user, tendang ke login
+  // 2. Jika tidak ada user setelah loading selesai, tendang ke login
   if (!user) {
     return <Navigate to="/login" replace />;
   }
@@ -43,10 +44,10 @@ const ProtectedRoute = ({ children }) => {
   return (
     <>
       {children}
-      {/* BottomNav disembunyikan di halaman checkout, success, admin, dan flash-sale agar fokus */}
+      {/* 3. Logic menyembunyikan BottomNav di halaman tertentu */}
       {!window.location.pathname.includes('/checkout') && 
        !window.location.pathname.includes('/order-success') && 
-       !window.location.pathname.includes('/admin') && ( // Hide nav di admin
+       !window.location.pathname.includes('/admin') && ( 
         <BottomNav />
       )}
     </>
@@ -58,7 +59,7 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <Router>
-          {/* Toaster untuk notifikasi popup */}
+          {/* Toaster wajib ada di sini agar notifikasi muncul & tidak error */}
           <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
           
           <Routes>
@@ -66,7 +67,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
-            {/* Protected Routes (User Login) */}
+            {/* Protected Routes (Wajib Login) */}
             <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/menu" element={<ProtectedRoute><MenuPage /></ProtectedRoute>} />
@@ -76,11 +77,10 @@ function App() {
             <Route path="/order-success" element={<ProtectedRoute><OrderSuccessPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             
-            {/* --- ROUTE ADMIN (BARU DIGABUNGKAN) --- */}
-            {/* Bisa diakses lewat http://localhost:5173/admin */}
+            {/* --- ROUTE ADMIN --- */}
             <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
             
-            {/* Catch all - redirect ke home */}
+            {/* Catch all - redirect ke home jika halaman tidak ditemukan */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
