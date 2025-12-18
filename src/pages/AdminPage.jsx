@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Tambah useNavigate
-import { useAuth } from '../contexts/AuthContext'; // Tambah useAuth
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { productAPI, orderAPI, dashboardAPI } from '../utils/api';
 import toast from 'react-hot-toast'; 
 
@@ -9,7 +9,7 @@ const formatRupiah = (num) => new Intl.NumberFormat('id-ID', { style: 'currency'
 const formatDate = (dateString) => new Date(dateString).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
 const AdminPage = () => {
-  const { logout } = useAuth(); // Ambil fungsi logout
+  const { logout } = useAuth();
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -143,7 +143,7 @@ const AdminPage = () => {
               <button onClick={() => setActiveTab('orders')} className={`px-4 py-2 rounded-md text-sm font-bold transition ${activeTab === 'orders' ? 'bg-white text-amber-900 shadow' : 'text-amber-200 hover:bg-amber-700'}`}>📦 Orders</button>
             </div>
 
-            {/* TOMBOL LOGOUT BARU */}
+            {/* TOMBOL LOGOUT */}
             <button 
               onClick={handleLogout}
               className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition shadow-md flex items-center gap-2 px-4 font-bold text-sm"
@@ -214,7 +214,8 @@ const AdminPage = () => {
                   <tbody className="divide-y divide-gray-100">
                     {recentOrders.map(order => (
                       <tr key={order.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 font-mono font-medium">#{order.id.slice(0,6)}</td>
+                        {/* PERBAIKAN: Tambah .toString() */}
+                        <td className="px-6 py-4 font-mono font-medium">#{order.id.toString().slice(0,6)}</td>
                         <td className="px-6 py-4 font-medium">{order.username}</td>
                         <td className="px-6 py-4 text-gray-500">{formatDate(order.created_at)}</td>
                         <td className="px-6 py-4 font-bold text-amber-800">{formatRupiah(order.total_amount)}</td>
@@ -362,7 +363,8 @@ const AdminPage = () => {
                    <div className="flex flex-col md:flex-row justify-between mb-4 gap-4">
                      <div>
                        <div className="flex items-center gap-2">
-                         <span className="font-mono font-bold text-gray-600">#{order.id.slice(0,8)}</span> 
+                         {/* PERBAIKAN: Tambah .toString() */}
+                         <span className="font-mono font-bold text-gray-600">#{order.id.toString().slice(0,8)}</span> 
                          <span className="text-xs text-gray-400">• {formatDate(order.created_at)}</span>
                        </div>
                        <h3 className="font-bold text-lg text-gray-900 mt-1">{order.customer_name}</h3>
